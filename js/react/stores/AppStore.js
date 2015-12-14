@@ -46,7 +46,7 @@ var AppStore = Reflux.createStore({
             "password": pass
         }, function(error, authData) {
             if (error) {
-                console.log("Login Failed!", error);
+                context.setAuthData(null);
             } else {
                 context.setAuthData(authData);
             }
