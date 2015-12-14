@@ -10,7 +10,11 @@
     "react-router": "^1.0.2",
     "reqwest": "^2.0.5"
   },
+  "devDependencies": {
+    "watch": "^0.16.0"
+  },
   "scripts": {
-    "build": "browserify -t [ babelify --presets [ react ] ] js/react/main.js -o dist/bundle.js"
+    "build": "browserify -t [ babelify --presets [ react ] ] js/react/main.js -o dist/bundle.js",
+    "build:watch": "watch 'npm run build' ."
   }
 }
