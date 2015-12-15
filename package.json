@@ -15,6 +15,6 @@
   },
   "scripts": {
     "build": "browserify -t [ babelify --presets [ react ] ] js/react/main.js -o dist/bundle.js",
-    "build:watch": "watch 'npm run build' ."
+    "build:watch": "./node_modules/.bin/watch 'npm run build' js/"
   }
 }
