@@ -2,46 +2,54 @@ var Reflux = require('reflux');
 var AppActions = require('../actions/AppActions');
 var reqwest = require('reqwest');
 
-var fireBaseUrl = 'https://dazzling-heat-2158.firebaseio.com/';
-var Firebase = require('firebase');
-var rootRef = new Firebase(fireBaseUrl);
-var historyRef = new Firebase(fireBaseUrl + 'history');
-var upcomingRef = new Firebase(fireBaseUrl + 'upcoming');
-
-historyRef.on('child_added', function(snapshot) {
-  // AppActions.addHistory(snapshot.val());
-});
-upcomingRef.on('child_added', function(snapshot) {
-  // AppActions.addUpcoming(snapshot.val());
-});
-
 var AppStore = Reflux.createStore({
     listenables: [AppActions],
     state: {
-        authData: null
+        authData: null,
+        history: [],
+        upcoming: [],
     },
     movieDbUrl: 'http://www.omdbapi.com/?t={title}&type=movie&plot=short&r=json',
-    onAddHistory: function(movie){
-        historyRef.push(movie);
+    fireBaseUrl: 'https://dazzling-heat-2158.firebaseio.com/',
+    rootRef: null,
+    historyRef: null,
+    upcomingRef: null,
+    init: function() {
+        var Firebase = require('firebase');
+        var context = this;
+        this.rootRef = new Firebase(this.fireBaseUrl);
+        this.historyRef = new Firebase(this.fireBaseUrl + 'history');
+        this.upcomingRef = new Firebase(this.fireBaseUrl + 'upcoming');
+        this.historyRef.on('child_added', function(snapshot) {
+            context.state.history.push(snapshot.val());
+            context.trigger({
+                storeData: context.state
+            });
+        });
+        this.upcomingRef.on('child_added', function(snapshot) {
+            context.state.upcoming.push(snapshot.val());
+            context.trigger({
+                storeData: context.state
+            });
+        });
     },
-    onAddUpcoming: function(movie){
-        upcomingRef.push(movie);
-    },
-    onGetAuth: function(){
-        var authData = rootRef.getAuth();
+    onGetAuth: function() {
+        var authData = this.rootRef.getAuth();
         this.setAuthData(authData);
     },
-    onLogout: function(){
-        rootRef.unauth();
+    onLogout: function() {
+        this.rootRef.unauth();
         this.setAuthData(null);
     },
-    setAuthData: function(val){
+    setAuthData: function(val) {
         this.state.authData = val;
-        this.trigger({authData: val});
+        this.trigger({
+            storeData: this.state
+        });
     },
     onSubmitLogin: function(email, pass) {
         var context = this;
-        rootRef.authWithPassword({
+        this.rootRef.authWithPassword({
             "email": email,
             "password": pass
         }, function(error, authData) {
