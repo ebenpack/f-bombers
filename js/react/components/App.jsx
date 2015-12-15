@@ -20,13 +20,17 @@ var App = React.createClass({
             email: '',
             pass: '',
             loginOpen: false,
-            authData: null,
+            storeData: {
+                authData: null,
+                history: [],
+                upcoming: [],
+            },
         };
     },
-    componentDidMount: function(){
+    componentDidMount: function() {
         AppActions.getAuth();
     },
-    addMovie: function(){
+    addMovie: function() {
         AppActions.addHistory({
             title: "Home Alone",
             img: "http://foobar.com",
@@ -40,10 +44,7 @@ var App = React.createClass({
                     <li><Link to={"/history"}>History</Link></li>
                     <li><Link to={"/upcoming"}>Upcoming</Link></li>
                 </ul>
-                <Login authData={this.state.authData} />
-                
-                <button onClick={this.addMovie}>Add movie</button>
-                {this.props.children}
+                <Login authData={this.state.storeData.authData} />
             </div>
         );
     }
