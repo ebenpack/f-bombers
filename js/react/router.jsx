@@ -5,7 +5,8 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 
 var App = require('./components/App.jsx');
-var Authenticate = require('./components/Authenticate.jsx');
+var History = require('./components/History.jsx');
+var Upcoming = require('./components/Upcoming.jsx');
 
 var Route = React.createClass({
     render: function(){
@@ -16,8 +17,12 @@ var Route = React.createClass({
                     component={App}
                 >
                     <Route
-                        path="authenticate"
-                        component={Authenticate}
+                        path="history"
+                        component={History}
+                    />
+                    <Route
+                        path="upcoming"
+                        component={Upcoming}
                     />
                 </Route>
             </Router>
