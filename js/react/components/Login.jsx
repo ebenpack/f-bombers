@@ -90,13 +90,13 @@ var App = React.createClass({
 
         var login = (
             (this.props.authData) ?
-            (<div>
-                    <button onClick={this.logout}>Logout</button>
-                </div>) :
-            (<div>
-                    <button onClick={this.openLogin}>Login</button>
-                    {modal}
-                </div>)
+            (<div className="login">
+                <button onClick={this.logout}>Logout</button>
+            </div>) :
+            (<div className="login">
+                <button onClick={this.openLogin}>Login</button>
+                {modal}
+            </div>)
         );
         return login;
     }
