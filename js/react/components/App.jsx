@@ -12,7 +12,7 @@ var Link = require('react-router').Link;
 
 var App = React.createClass({
     mixins: [
-        Reflux.connect(AppStore),
+        Reflux.connect(AppStore, 'appData'),
         History
     ],
     getInitialState: function() {
@@ -20,11 +20,6 @@ var App = React.createClass({
             email: '',
             pass: '',
             loginOpen: false,
-            storeData: {
-                authData: null,
-                history: [],
-                upcoming: [],
-            },
         };
     },
     componentDidMount: function() {
@@ -40,11 +35,16 @@ var App = React.createClass({
     render: function() {
         return (
             <div className="container">
-                <ul>
-                    <li><Link to={"/history"}>History</Link></li>
-                    <li><Link to={"/upcoming"}>Upcoming</Link></li>
-                </ul>
-                <Login authData={this.state.storeData.authData} />
+                <nav className="row">
+                    <ul>
+                        <li><Link to={"/history"}>History</Link></li>
+                        <li><Link to={"/upcoming"}>Upcoming</Link></li>
+                    </ul>
+                    <Login authData={this.state.appData.authData} />
+                </nav>
+                <div className="row">
+                    {this.props.children}
+                </div>
             </div>
         );
     }
