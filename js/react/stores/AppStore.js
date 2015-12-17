@@ -22,16 +22,15 @@ var AppStore = Reflux.createStore({
         this.upcomingRef = new Firebase(this.fireBaseUrl + 'upcoming');
         this.historyRef.on('child_added', function(snapshot) {
             context.state.history.push(snapshot.val());
-            context.trigger({
-                storeData: context.state
-            });
+            context.trigger(context.state);
         });
         this.upcomingRef.on('child_added', function(snapshot) {
             context.state.upcoming.push(snapshot.val());
-            context.trigger({
-                storeData: context.state
-            });
+            context.trigger(context.state);
         });
+    },
+    getInitialState: function(){
+        return this.state;
     },
     onGetAuth: function() {
         var authData = this.rootRef.getAuth();
@@ -43,9 +42,7 @@ var AppStore = Reflux.createStore({
     },
     setAuthData: function(val) {
         this.state.authData = val;
-        this.trigger({
-            storeData: this.state
-        });
+        this.trigger(this.state);
     },
     onSubmitLogin: function(email, pass) {
         var context = this;
