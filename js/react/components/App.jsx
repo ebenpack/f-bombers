@@ -39,6 +39,7 @@ var App = React.createClass({
                     <ul>
                         <li><Link to={"/history"}>History</Link></li>
                         <li><Link to={"/upcoming"}>Upcoming</Link></li>
+                        <li><Link to={"/addmovie"}>Add Movie</Link></li>
                     </ul>
                     <Login authData={this.state.appData.authData} />
                 </nav>
