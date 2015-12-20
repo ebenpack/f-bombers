@@ -7,6 +7,7 @@ var Route = ReactRouter.Route;
 var App = require('./components/App.jsx');
 var History = require('./components/History.jsx');
 var Upcoming = require('./components/Upcoming.jsx');
+var AddMovie = require('./components/AddMovie.jsx');
 
 var Route = React.createClass({
     render: function(){
@@ -23,6 +24,10 @@ var Route = React.createClass({
                     <Route
                         path="upcoming"
                         component={Upcoming}
+                    />
+                    <Route
+                        path="addmovie"
+                        component={AddMovie}
                     />
                 </Route>
             </Router>
