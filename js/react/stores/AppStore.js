@@ -8,8 +8,9 @@ var AppStore = Reflux.createStore({
         authData: null,
         history: [],
         upcoming: [],
+        searchResults: [],
     },
-    movieDbUrl: 'http://www.omdbapi.com/?t={title}&type=movie&plot=short&r=json',
+    movieDbUrl: 'http://www.omdbapi.com/?s={title}&type=movie&plot=short&r=json',
     fireBaseUrl: 'https://dazzling-heat-2158.firebaseio.com/',
     rootRef: null,
     historyRef: null,
@@ -21,16 +22,24 @@ var AppStore = Reflux.createStore({
         this.historyRef = new Firebase(this.fireBaseUrl + 'history');
         this.upcomingRef = new Firebase(this.fireBaseUrl + 'upcoming');
         this.historyRef.on('child_added', function(snapshot) {
-            context.state.history.push(snapshot.val());
+            var data = snapshot.val();
+            data.id = snapshot.key();
+            context.state.history.push(data);
             context.trigger(context.state);
         });
         this.upcomingRef.on('child_added', function(snapshot) {
-            context.state.upcoming.push(snapshot.val());
+            var data = snapshot.val();
+            data.id = snapshot.key();
+            context.state.upcoming.push(data);
             context.trigger(context.state);
         });
     },
     getInitialState: function(){
         return this.state;
+    },
+    setAuthData: function(val) {
+        this.state.authData = val;
+        this.trigger(this.state);
     },
     onGetAuth: function() {
         var authData = this.rootRef.getAuth();
@@ -40,9 +49,56 @@ var AppStore = Reflux.createStore({
         this.rootRef.unauth();
         this.setAuthData(null);
     },
-    setAuthData: function(val) {
-        this.state.authData = val;
-        this.trigger(this.state);
+    onAddHistory: function(movie){
+        delete movie.id;
+        this.historyRef.push(movie);
+    },
+    onAddUpcoming: function(movie){
+        delete movie.id;
+        this.upcomingRef.push(movie);
+    },
+    onRemoveHistory: function(id){
+        var context = this;
+        this.historyRef.child(id).remove(
+            function(){
+                context.state.history = context.state.history.filter(function(movie){
+                    return movie.id !== id;
+                });
+                context.trigger(context.state);
+            }
+        );
+    },
+    onRemoveUpcoming: function(id){
+        var context = this;
+        this.upcomingRef.child(id).remove(
+            function(){
+                context.state.upcoming = context.state.upcoming.filter(function(movie){
+                    return movie.id !== id;
+                });
+                context.trigger(context.state);
+            }
+        );
+    },
+    onSearchMovies: function(movie){
+        var context = this;
+        reqwest({
+            url:this.movieDbUrl.replace('{title}', encodeURIComponent(movie)),
+            crossOrigin: true,
+        })
+            .then(function(results){
+                context.state.searchResults = results.Search.map(function(movie){
+                    return {
+                        title: movie.Title,
+                        year: movie.Year,
+                        img: movie.Poster,
+                        id: movie.imdbID
+                    };
+                });
+                context.trigger(context.state);
+            })
+            .catch(function(e){
+                console.log(e);
+            });
     },
     onSubmitLogin: function(email, pass) {
         var context = this;
