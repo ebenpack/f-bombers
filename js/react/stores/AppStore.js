@@ -90,7 +90,7 @@ var AppStore = Reflux.createStore({
                     return {
                         title: movie.Title,
                         year: movie.Year,
-                        img: movie.Poster,
+                        img: (movie.Poster !== 'N/A' ? movie.Poster : '/defaultposter.jpg'),
                         id: movie.imdbID
                     };
                 });
