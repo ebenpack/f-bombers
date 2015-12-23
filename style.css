@@ -66,6 +66,14 @@
   display: inline;
 }
 
+.movie .poster {
+  max-width:180px;
+}
+
+.history, .upcoming {
+  border-bottom: 1px solid gray;
+}
+
 button {
   background-color: white;
 }
