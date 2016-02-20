@@ -17,7 +17,7 @@ var Upcoming = React.createClass({
             <div>
                 {this.state.upcomingData.upcoming.map(function(movie){
                     return (
-                        <div>
+                        <div className="upcoming">
                             <Movie
                                 key={movie.id}
                                 title={movie.title}

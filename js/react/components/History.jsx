@@ -16,7 +16,7 @@ var History = React.createClass({
             <div>
                 {this.state.historyData.history.map(function(movie){
                     return (
-                        <div>
+                        <div className="history">
                             <Movie
                                 key={movie.id}
                                 title={movie.title}
